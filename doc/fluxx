@@ -1,0 +1,41 @@
+phases:
+    setup:
+        1. place 'Basic Rules'
+        2. deal 3 cards each
+        3. player = random
+        4. phase = draw
+    draw:
+        o. option: draw card from draw pile
+            drawn++
+        1. phase = play if drawn = limit
+    play:
+        o. option: play card
+            played++
+        1. phase = done if played = limit
+    done:
+        1. player = next                           # order change
+        2. phase = draw
+start:
+    setup
+cards:
+    Basic Rules: Draw phase: limit=1. Play phase: limit=1
+    Draw 2: Draw phase: limit=2. On Play: Discard any Draw * cards; phase=draw
+    Draw 3: Draw phase: limit=3. On Play: Discard any Draw * cards; phase=draw
+    Draw 4: Draw phase: limit=4. On Play: Discard any Draw * cards; phase=draw
+    Draw 5: Draw phase: limit=5. On Play: Discard any Draw * cards; phase=draw
+    Composting: add Draw option: look at and draw bottom of discard
+
+    Play 2: Play phase: limit=2. On Play: Discard any Play * cards
+    Play 3: Play phase: limit=3. On Play: Discard any Play * cards
+    Play 4: Play phase: limit=4. On Play: Discard any Play * cards
+    Play All: Play phase: limit=[cards in hand]. On Play: Discard any Play * cards
+    First play random: Play: addfirst: play [random]
+
+    Hand Limit 0: Done: addoption: Discard from hand; addfirst: repeat unless [hand]==0
+    Hand Limit 1: Done: addoption: Discard from hand; addfirst: repeat unless [hand]==1
+    Hand Limit 2: Done: addoption: Discard from hand; addfirst: repeat unless [hand]==2
+
+    Keeper Limit 2: Done: addoption: Discard keeper; addfirst: repeat unless [keeper]==2
+    Keeper Limit 3: Done: addoption: Discard keeper; addfirst: repeat unless [keeper]==3
+
+    Rich Bonus: Play phase: if [my keepers]>[other keepers] limit++

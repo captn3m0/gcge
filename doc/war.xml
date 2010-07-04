@@ -1,0 +1,14 @@
+<game name="war" players="2">
+    <attribute name="hand">
+    <phases first="setup">
+        <phase name="setup">
+            <deck action="deal" to="ALL"  count="ALL"/>
+            <switch phase="play"/>
+        </phase>
+        <phase name="play">
+            
+</game>
+
+
+
+<!--generic-->

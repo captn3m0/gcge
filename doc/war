@@ -1,0 +1,36 @@
+name: war
+players: 2
+phases:
+    setup:
+        1. deal out deck
+        2. phase = play
+    play:
+        1. each player: play card
+        2.  if card a > card b:
+                player a takes cards
+            elseif card b > card a:
+                player b takes cards
+            else
+                phase = war
+        3. phase = next
+    war:
+        1. each player: place 3 down, 1 up
+        2.  if card a > card b:
+                player a takes cards
+            elseif card b > card a:
+                player b takes cards
+            else
+                phase = war
+        3. phase = next
+    next:
+        if deck = 0:
+            phase = lose
+        if deck = 52:
+            phase = win
+        phase = play
+    lose:
+    win:
+start:
+    setup
+cards:
+    [O2-10JQKA][HDCS]
