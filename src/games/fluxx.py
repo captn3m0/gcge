@@ -81,7 +81,7 @@ class Fluxx:
 
     def play(self, engine):
         if engine.turn.played < engine.phase.limit:
-            engine.registerOption("wait", lambda: x)
+            engine.registerOption("wait", lambda: 1)
             for card in engine.hands[engine.player]:
                 def playCard(e=engine,c=card):
                     if card.isRule:
