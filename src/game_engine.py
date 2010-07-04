@@ -12,16 +12,21 @@ class GameEngine:
         self.options = {}
         self.zones = [{} for p in range(-1, numPlayers)]
         self.phaseCallback = {}
-        self.hands = dict.fromkeys(range(1,numPlayers+1), [])
+        self.hands = {}
+        for p in range(1,numPlayers+1):
+            self.hands[p] = Hand(p)
         self.game = Fluxx(self, numPlayers)
 
     def run(self):
         while not self.ended:
             self.options.clear()
-            self.procPhase(str(self.phase))
-            print("Running phase {0} limit = {1}".format(self.phase,
-                  self.phase.limit if hasattr(self.phase,'limit') else 'none'))
-            phaseFunc = getattr(self.game, str(self.phase))
+            self.procPhase(self.phase)
+            try:
+                print(" ".join(map(str,[self.turn, self.phase,
+                        self.hands[self.turn.player]])))
+            except AttributeError as a:
+                print(a)
+            phaseFunc = getattr(self.game, self.phase.name)
             phaseFunc(self)
             if len(self.options):
                 choice = input("Choose: " +
@@ -37,8 +42,6 @@ class GameEngine:
 
     def setPhase(self, phase):
         self.phase = Phase(phase)
-    def setPlayer(self, player):
-        self.player = player
     def setTurn(self, turn):
         self.turn = turn
 
@@ -52,7 +55,8 @@ class GameEngine:
         self.zones[player][zone] = []
 
     def give(self, player, card):
-        self.hands[player].append(card)
+        print("Giving player {0} card {1}".format(player,card))
+        self.hands[player].give(card)
     def draw(self, zone):
         return self.zones[zone]['deck'].draw()
 
@@ -73,8 +77,9 @@ class GameEngine:
     def unregisterForPhase(self, phase, card):
         self.phaseCallback[phase].remove(card)
     def procPhase(self, phase):
-        for cbk in sorted(self.phaseCallback[phase].keys(),key=lambda x:x.priority):
-            self.phaseCallback[phase][cbk](self)
+        for cbk in sorted(self.phaseCallback[phase.name].keys(),
+                key=lambda c:c.priority):
+            self.phaseCallback[phase.name][cbk](self)
 
 g = GameEngine('fluxx',2)
 g.run()
