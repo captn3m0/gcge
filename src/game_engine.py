@@ -12,16 +12,18 @@ class GameEngine:
         self.options = {}
         self.zones = [{} for p in range(-1, numPlayers)]
         self.phaseCallback = {}
-        self.hands = [[] for p in range(0, numPlayers)]
+        self.hands = dict.fromkeys(range(1,numPlayers+1), [])
         self.game = Fluxx(self, numPlayers)
 
     def run(self):
         while not self.ended:
             self.options.clear()
-            phaseFunc = getattr(self.game, str(self.phase))
             self.procPhase(str(self.phase))
+            print("Running phase {0} limit = {1}".format(self.phase,
+                  self.phase.limit if hasattr(self.phase,'limit') else 'none'))
+            phaseFunc = getattr(self.game, str(self.phase))
             phaseFunc(self)
-            if self.options:
+            if len(self.options):
                 choice = input("Choose: " +
                         ",".join(list(self.options.keys())) + "? ")
                 if choice in self.options:
@@ -57,9 +59,11 @@ class GameEngine:
     def discard(self, player, card):
         self.zones[player]['discard'].append(card)
 
-    def play(self, card, player, zone):
-        self.zones[player][zone].append(card)
+    def play(self, card, player, controller, zone):
+        self.zones[controller][zone].append(card)
         card.onplay(self)
+        if player:
+            self.hands[player].remove(card)
 
     def registerOption(self, name, func):
         self.options[name] = func
@@ -69,8 +73,8 @@ class GameEngine:
     def unregisterForPhase(self, phase, card):
         self.phaseCallback[phase].remove(card)
     def procPhase(self, phase):
-        for cbk in self.phaseCallback[phase].values():
-            cbk(self)
+        for cbk in sorted(self.phaseCallback[phase].keys(),key=lambda x:x.priority):
+            self.phaseCallback[phase][cbk](self)
 
 g = GameEngine('fluxx',2)
 g.run()
