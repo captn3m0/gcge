@@ -25,14 +25,25 @@ class Hand:
         self.hand.remove(card)
 
 class Deck:
-    def __init__(self):
-        self.cards = []
-
-    def __init__(self, cards):
+    def __init__(self, cards=[]):
         self.cards = cards
+    def __iter__(self):
+        return self.cards.__iter__()
+    def __getitem__(self, index):
+        return self.cards[index]
+
+    def size(self):
+        return len(self.cards)
+
+    def add(self, card):
+        self.cards.append(card)
+
+    def shuffleIn(self, cards):
+        self.cards.extend(cards)
+        self.shuffle()
 
     def shuffle(self):
-        random.shuffle(cards)
+        random.shuffle(self.cards)
 
     def deal(self, who, num):
         pass

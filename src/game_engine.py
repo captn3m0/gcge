@@ -73,11 +73,27 @@ class GameEngine:
     def discard(self, player, card):
         self.zones[player]['discard'].append(card)
 
-    def play(self, card, player, controller, zone):
+    def discardToDraw(self, discard=0, deck=0):
+        print("Shuffling discard to deck")
+        self.zones[deck]['deck'].shuffleIn(self.zones[discard]['discard'])
+        self.zones[discard]['discard'] = []
+
+    def browseZone(self, zone, controller=0):
+        return self.zones[controller][zone]
+
+    def play(self, card, zone, player=0, controller=None):
+        if controller is None:
+            controller = player
         self.zones[controller][zone].append(card)
         card.onplay(self)
         if player:
             self.hands[player].remove(card)
+    def unplay(self, card, zone, controller=0):
+        self.zones[controller][zone].remove(card)
+        card.onleave(self)
+        return card
+    def discard(self, card, controller=0, zone='discard'):
+        self.zones[controller][zone].add(card)
 
     def registerOption(self, name, func):
         self.options[name] = func
@@ -85,7 +101,7 @@ class GameEngine:
     def registerForPhase(self, phase, card):
         self.phaseCallback[phase][card] = getattr(card, phase)
     def unregisterForPhase(self, phase, card):
-        self.phaseCallback[phase].remove(card)
+        self.phaseCallback[phase].pop(card, None)
     def procPhase(self, phase):
         for cbk in sorted(self.phaseCallback[phase.name].keys(),
                 key=lambda c:c.priority):

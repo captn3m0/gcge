@@ -20,7 +20,8 @@ class BasicRules(Card):
         engine.registerForPhase('play', self)
         engine.registerForPhase('draw', self)
     def onleave(self, engine):
-        engine.unregister(self)
+        engine.unregisterForPhase('play', self)
+        engine.unregisterForPhase('draw', self)
     def draw(self, engine):
         print("Setting basic limit")
         engine.phase.limit = 1
@@ -38,6 +39,13 @@ class DrawN(Card):
         print("Played {0}".format(self.name))
         engine.registerForPhase('draw', self)
         engine.setPhase('draw')
+        for card in engine.browseZone('rules'):
+            if card != self and card.name.startswith('Draw '):
+                engine.unplay(card, 'rules')
+                engine.discard(card)
+    def onleave(self, engine):
+        print("Discarding {}".format(self.name))
+        engine.unregisterForPhase('draw', self)
     def draw(self, engine):
         print("Setting draw limit to {0}".format(self.n))
         engine.phase.limit = self.n
@@ -53,6 +61,13 @@ class PlayN(Card):
         print("Played {0}".format(self.name))
         engine.registerForPhase('play', self)
         engine.setPhase('play')
+        for card in engine.browseZone('rules'):
+            if card != self and card.name.startswith('Play '):
+                engine.unplay(card, 'rules')
+                engine.discard(card)
+    def onleave(self, engine):
+        print("Discarding {}".format(self.name))
+        engine.unregisterForPhase('play', self)
     def play(self, engine):
         print("Setting play limit to {0}".format(self.n))
         engine.phase.limit = self.n
@@ -69,7 +84,7 @@ class FirstPlayRandom(Card):
         player = engine.turn.player
         if engine.turn.played == 0 and engine.hands[player].size() > 0:
             pick = random.randint(0, engine.hands[player].size()-1)
-            engine.play(engine.hands[player][pick], player, 0, 'rules')
+            engine.play(engine.hands[player][pick], 'rules', player, 0)
             engine.turn.played += 1
     def isRule(self):
         return True
@@ -89,7 +104,7 @@ class Fluxx:
         engine.setPhase("setup")
         engine.registerZone('rules', 0)
         engine.registerDeck(Fluxx.makeDeck(), 0)
-        engine.registerDiscard([], 0)
+        engine.registerDiscard(Deck(), 0)
         for p in range(1, numPlayers):
             engine.registerZone('keepers', p)
             engine.registerZone('creepers', p)
@@ -97,7 +112,7 @@ class Fluxx:
         engine.ended = False
 
     def setup(self, engine):
-        engine.play(Fluxx.card['Basic Rules'], 0, 0, 'rules')
+        engine.play(Fluxx.card['Basic Rules'], 'rules')
         # deal 3 cards
         engine.setTurn(FluxxTurn(random.randint(1, self.numPlayers)))
         engine.setPhase("draw")
@@ -105,6 +120,8 @@ class Fluxx:
     def draw(self, engine):
         if engine.turn.drawn < engine.phase.limit:
             def drawCard(e=engine):
+                if e.browseZone('deck').size() == 0:
+                    e.discardToDraw()
                 print('Drew a card')
                 e.give(e.turn.player,e.draw(0))
                 e.turn.drawn += 1
@@ -119,9 +136,9 @@ class Fluxx:
             for card in engine.hands[engine.turn.player]:
                 def playCard(e=engine,c=card):
                     if card.isRule:
-                        e.play(c, e.turn.player, 0, 'rules')
+                        e.play(c, 'rules', e.turn.player, 0)
                     else:
-                        e.play(c, e.turn.player, e.turn.player, 'null')
+                        e.play(c, 'null', e.turn.player)
                     e.turn.played += 1
                 engine.registerOption("play {0}".format(card.name),
                         playCard)
