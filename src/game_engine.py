@@ -20,15 +20,19 @@ class GameEngine:
     def run(self):
         while not self.ended:
             self.options.clear()
-            self.procPhase(self.phase)
+            if len(self.nextphase):
+                self.phase = self.nextphase.pop(0)
+            phase = self.phase
+            self.procPhase(phase)
             try:
-                print(" ".join(map(str,[self.turn, self.phase,
+                print(" ".join(map(str,[self.turn, phase,
                         self.hands[self.turn.player]])))
             except AttributeError as a:
                 print(a)
-            phaseFunc = getattr(self.game, self.phase.name)
+            phaseFunc = getattr(self.game, phase.name)
             phaseFunc(self)
             if len(self.options):
+                self.registerOption('exit', sys.exit)
                 choice = input("Choose: " +
                         ",".join(list(self.options.keys())) + "? ")
                 if choice in self.options:
@@ -37,11 +41,17 @@ class GameEngine:
                     print("Bad option")
 
     def registerPhases(self, phases):
+        self.nextphase = []
+        self.phaseOrder = {}
+        index = 0
         for phase in phases:
+            self.phaseOrder[phase] = index
+            index += 1
             self.phaseCallback[phase] = {}
 
     def setPhase(self, phase):
-        self.phase = Phase(phase)
+        self.nextphase.append(Phase(phase))
+        self.nextphase.sort(key=lambda p:self.phaseOrder[p.name])
     def setTurn(self, turn):
         self.turn = turn
 

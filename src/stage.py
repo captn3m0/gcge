@@ -3,7 +3,8 @@ class Phase:
         self.name = name
 
     def __str__(self):
-        return "Phase {0}".format(self.name)
+        return "Phase {0} L{1}".format(self.name,
+                self.limit if hasattr(self, 'limit') else 'x')
 
     def __eq__(self, other):
         return self.name == other

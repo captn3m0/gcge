@@ -22,7 +22,7 @@ class BasicRules(Card):
     def onleave(self, engine):
         engine.unregister(self)
     def draw(self, engine):
-        #print("Setting basic limit")
+        print("Setting basic limit")
         engine.phase.limit = 1
     def play(self, engine):
         engine.phase.limit = 1
@@ -39,7 +39,7 @@ class DrawN(Card):
         engine.registerForPhase('draw', self)
         engine.setPhase('draw')
     def draw(self, engine):
-        #print("Setting card limit to {0}".format(self.n))
+        print("Setting draw limit to {0}".format(self.n))
         engine.phase.limit = self.n
     def isRule(self):
         return True
@@ -52,9 +52,25 @@ class PlayN(Card):
     def onplay(self, engine):
         print("Played {0}".format(self.name))
         engine.registerForPhase('play', self)
+        engine.setPhase('play')
     def play(self, engine):
-        #print("Setting card limit to {0}".format(self.n))
+        print("Setting play limit to {0}".format(self.n))
         engine.phase.limit = self.n
+    def isRule(self):
+        return True
+
+class FirstPlayRandom(Card):
+    def __init__(self):
+        super().__init__('First Play Random')
+        self.priority = 0
+    def onplay(self, engine):
+        engine.registerForPhase('play', self)
+    def play(self, engine):
+        player = engine.turn.player
+        if engine.turn.played == 0 and engine.hands[player].size() > 0:
+            pick = random.randint(0, engine.hands[player].size()-1)
+            engine.play(engine.hands[player][pick], player, 0, 'rules')
+            engine.turn.played += 1
     def isRule(self):
         return True
 
@@ -62,7 +78,8 @@ class PlayN(Card):
 
 class Fluxx:
     card = {"Basic Rules": BasicRules(), "Draw 2":DrawN(2), "Draw 3":DrawN(3),
-                "Play 2":PlayN(2), "Play 3":PlayN(3)}
+                "Play 2":PlayN(2), "Play 3":PlayN(3),
+                "FPR":FirstPlayRandom()}
 
     def info():
         return {'name' : 'Fluxx', 'players' : '2-6'}
@@ -116,6 +133,6 @@ class Fluxx:
         engine.setPhase("draw")
 
     def makeDeck():
-        deck = Deck([Fluxx.card['Draw 2'], Fluxx.card['Draw 3'],
-            Fluxx.card['Play 2'], Fluxx.card['Play 3']])
+        deck = Deck([Fluxx.card['FPR'], Fluxx.card['Draw 2'], 
+            Fluxx.card['Draw 3'], Fluxx.card['Play 2'], Fluxx.card['Play 3']])
         return deck

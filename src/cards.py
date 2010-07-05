@@ -14,6 +14,8 @@ class Hand:
         return "Hand [{0}]".format(":".join(map(str, self.hand)))
     def __iter__(self):
         return self.hand.__iter__()
+    def __getitem__(self, index):
+        return self.hand[index]
 
     def size(self):
         return len(self.hand)
