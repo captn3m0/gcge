@@ -2,7 +2,6 @@
 
 import sys
 sys.path.append('./games')
-#from fluxx import Fluxx
 
 from cards import *
 from stage import *
@@ -108,5 +107,12 @@ class GameEngine:
                 key=lambda c:c.priority):
             self.phaseCallback[phase.name][cbk](self)
 
-g = GameEngine('fluxx',2)
-g.run()
+if __name__ == '__main__':
+    game = 'fluxx'
+    players = 2
+    if len(sys.argv) > 1:
+        game = sys.argv[1]
+    if len(sys.argv) > 2:
+        players = int(sys.argv[2])
+    g = GameEngine(game, players)
+    g.run()
