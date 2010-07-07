@@ -2,7 +2,7 @@
 
 import sys
 sys.path.append('./games')
-from fluxx import Fluxx
+#from fluxx import Fluxx
 
 from cards import *
 from stage import *
@@ -15,7 +15,8 @@ class GameEngine:
         self.hands = {}
         for p in range(1,numPlayers+1):
             self.hands[p] = Hand(p)
-        self.game = Fluxx(self, numPlayers)
+        gameMod = __import__(game)
+        self.game = gameMod.Game(self, numPlayers)
 
     def run(self):
         while not self.ended:
@@ -34,7 +35,7 @@ class GameEngine:
             if len(self.options):
                 self.registerOption('exit', sys.exit)
                 choice = input("Choose: " +
-                        ",".join(list(self.options.keys())) + "? ")
+                        ", ".join(list(self.options.keys())) + "? ")
                 if choice in self.options:
                     self.options[choice]()
                 else:
