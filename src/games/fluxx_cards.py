@@ -1,9 +1,23 @@
 from cards import * 
 
-class BasicRules(Card):
+class FluxxCard(Card):
+    def __init__(self, name, type, priority = 0):
+        super().__init__(name)
+        self.priority = priority
+        self.type = type
+    def playself(self, engine, player):
+        if self.type == 'rule':
+            engine.play(self, 'rules', player, 0)
+        elif self.type == 'keeper':
+            engine.play(self, 'keepers', player)
+        elif self.type == 'creeper':
+            engine.play(self, 'creepers', player)
+        elif self.type == 'action':
+            engine.play(self, 'actions', player)
+
+class BasicRules(FluxxCard):
     def __init__(self):
-        super().__init__("Basic Rules")
-        self.priority = 0
+        super().__init__("Basic Rules", 'rule')
     def onplay(self, engine):
         print("Played Basic Rule")
         engine.registerForPhase('play', self)
@@ -12,18 +26,14 @@ class BasicRules(Card):
         engine.unregisterForPhase('play', self)
         engine.unregisterForPhase('draw', self)
     def draw(self, engine):
-        print("Setting basic limit")
         engine.phase.limit = 1
     def play(self, engine):
         engine.phase.limit = 1
-    def isRule(self):
-        return True
 
-class DrawN(Card):
+class DrawN(FluxxCard):
     def __init__(self,n):
-        super().__init__("Draw {0}".format(n))
+        super().__init__("Draw {0}".format(n), 'rule', 1)
         self.n = n
-        self.priority = 1
     def onplay(self, engine):
         print("Played {0}".format(self.name))
         engine.registerForPhase('draw', self)
@@ -36,16 +46,13 @@ class DrawN(Card):
         print("Discarding {}".format(self.name))
         engine.unregisterForPhase('draw', self)
     def draw(self, engine):
-        print("Setting draw limit to {0}".format(self.n))
+        #print("Setting draw limit to {0}".format(self.n))
         engine.phase.limit = self.n
-    def isRule(self):
-        return True
 
-class PlayN(Card):
+class PlayN(FluxxCard):
     def __init__(self,n):
-        super().__init__("Play {0}".format(n))
+        super().__init__("Play {0}".format(n), 'rule', 1)
         self.n = n
-        self.priority = 1
     def onplay(self, engine):
         print("Played {0}".format(self.name))
         engine.registerForPhase('play', self)
@@ -58,23 +65,18 @@ class PlayN(Card):
         print("Discarding {}".format(self.name))
         engine.unregisterForPhase('play', self)
     def play(self, engine):
-        print("Setting play limit to {0}".format(self.n))
+        #print("Setting play limit to {0}".format(self.n))
         engine.phase.limit = self.n
-    def isRule(self):
-        return True
 
-class FirstPlayRandom(Card):
+class FirstPlayRandom(FluxxCard):
     def __init__(self):
-        super().__init__('First Play Random')
-        self.priority = 0
+        super().__init__('First Play Random', 'rule')
     def onplay(self, engine):
         engine.registerForPhase('play', self)
     def play(self, engine):
         player = engine.turn.player
         if engine.turn.played == 0 and engine.hands[player].size() > 0:
             pick = random.randint(0, engine.hands[player].size()-1)
-            engine.play(engine.hands[player][pick], 'rules', player, 0)
+            engine.hands[player][pick].playself(engine, player)
             engine.turn.played += 1
-    def isRule(self):
-        return True
 
