@@ -89,7 +89,11 @@ def makePlayingCardDeck(ranking,suits):
             name = PlayingCard.value[value]
             card = PlayingCard("N",value,rank) 
             cards.append(card)
+<<<<<<< local
+            card = PlayingCard(name,"N",value,rank) 
+=======
             card = PlayingCard("N",value,rank) 
+>>>>>>> other
             cards.append(card)
         else:
             for suit in list(suits):
