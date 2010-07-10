@@ -54,3 +54,43 @@ class Deck:
 
     def draw(self):
         return self.cards.pop(0)
+
+class PlayingCard(Card):
+    suit = {"H":"Heart","C":"Club","D":"Diamond","S":"Spade","N":"None"}
+    value = {"2":"Two","3":"Three","4":"Four","5":"Five","6":"Six",
+              "7":"Seven","8":"Eight","9":"Nine","0":"Ten",
+              "J":"Jack","Q":"Queen","K":"King","A":"Ace","O":"Joker"}
+    def __init__(self, name,suit,value,rank):
+        super().__init__(name)
+        self.name = name
+        self.suit = suit
+        self.value = value
+        self.rank = rank
+    def __str__(self):
+        return self.name
+
+def makePlayingCardDeck(ranking,suits):
+    rank = 0
+    cards = []
+    for value in list(ranking):
+        if value == " ":
+            rank += 1
+        elif value == "O":
+            name = PlayingCard.value[value]
+            card = PlayingCard(name,"N",value,rank) 
+            cards.append(card)
+            print(card,"added")
+            card = PlayingCard(name,"N",value,rank) 
+            cards.append(card)
+            print(card,"added")
+        else:
+            for suit in list(suits):
+                name = PlayingCard.value[value] + " of " + PlayingCard.suit[suit] + "s"
+                card = PlayingCard(name,suit,value,rank) 
+                cards.append(card)
+                print(card,"added")
+    deck = Deck(cards) 
+    return deck
+
+def stdDeck():
+    return makePlayingCardDeck("O 2 3 4 5 6 7 8 9 0 J Q K A","HDCS")
