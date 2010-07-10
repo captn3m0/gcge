@@ -66,7 +66,7 @@ class GameEngine:
 
     def give(self, player, card):
         print("Giving player {0} card {1}".format(player,card))
-        self.hands[player].give(card)
+        self.hands[player].add(card)
     def draw(self, zone):
         return self.zones[zone]['deck'].draw()
 

@@ -19,7 +19,7 @@ class Hand:
 
     def size(self):
         return len(self.hand)
-    def give(self, card):
+    def add(self, card):
         self.hand.append(card)
     def remove(self, card):
         self.hand.remove(card)
@@ -47,8 +47,10 @@ class Deck:
     def shuffle(self):
         random.shuffle(self.cards)
 
-    def deal(self, who, num):
-        pass
+    def deal(self, dest, num):
+        for i in range(0, num):
+            for d in dest:
+                d.add(self.draw())
 
     def draw(self):
         return self.cards.pop(0)

@@ -36,7 +36,7 @@ class Game:
         return {'name' : 'Fluxx', 'players' : '2-6'}
 
     def __init__(self, engine, numPlayers):
-        engine.registerPhases("setup draw play action done".split())
+        engine.registerPhases("setup action draw play done".split())
         engine.setPhase("setup")
         engine.registerZone('rules', 0)
         engine.registerDeck(Game.makeDeck(), 0)

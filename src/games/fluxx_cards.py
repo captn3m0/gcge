@@ -22,6 +22,8 @@ class FluxxCard(Card):
             engine.play(self, 'actions', to, _from)
     def onplay(self, engine):
         pass
+    def onleave(self, engine):
+        pass
 
 class BasicRules(FluxxCard):
     def __init__(self):
@@ -98,6 +100,8 @@ class DrawNPlayM(FluxxCard):
         self.drawn = 0
         self.played = 0
         self.temphand = []
+    def onleave(self, engine):
+        engine.unregisterForPhase('action', self)
     def action(self, engine):
         print("In {} Drawn{}/{} Played {}/{}".format(self.name, self.drawn,
             self.draw, self.played, self.play))
@@ -120,6 +124,7 @@ class DrawNPlayM(FluxxCard):
         else:
             for card in self.temphand:
                 engine.discard(card)
+            engine.discard(engine.unplay(self, 'actions', player))
             engine.setPhase("draw")
 
 class Keeper(FluxxCard):
