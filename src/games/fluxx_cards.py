@@ -20,10 +20,6 @@ class FluxxCard(Card):
             engine.play(self, 'creepers', to, _from)
         elif self.type == 'action':
             engine.play(self, 'actions', to, _from)
-    def onplay(self, engine):
-        pass
-    def onleave(self, engine):
-        pass
 
 class BasicRules(FluxxCard):
     def __init__(self):
