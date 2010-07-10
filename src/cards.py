@@ -23,6 +23,8 @@ class Hand:
         self.hand.append(card)
     def remove(self, card):
         self.hand.remove(card)
+    def pickRandom(self):
+        return self.hand[random.randint(0, self.size()-1)]
 
 class Deck:
     def __init__(self, cards=[]):

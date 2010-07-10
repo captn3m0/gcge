@@ -76,7 +76,6 @@ class FirstPlayRandom(FluxxCard):
     def play(self, engine):
         player = engine.turn.player
         if engine.turn.played == 0 and engine.hands[player].size() > 0:
-            pick = random.randint(0, engine.hands[player].size()-1)
-            engine.hands[player][pick].playself(engine, player)
+            engine.hands[player].pickRandom().playself(engine, player)
             engine.turn.played += 1
 
