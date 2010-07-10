@@ -3,8 +3,8 @@
 import sys
 sys.path.append('./games')
 
-from cards import *
-from stage import *
+from cards import Hand
+from stage import Phase
 
 class GameEngine:
     def __init__(self, game, numPlayers):

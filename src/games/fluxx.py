@@ -24,6 +24,13 @@ class Game:
                 "Play 2":PlayN(2), "Play 3":PlayN(3),
                 "FPR":FirstPlayRandom(), "D3P2":DrawNPlayM(3,2),
                 "D2P2":DrawNPlayM(2,2)}
+    keeper = (  Keeper('The Shovel','pow'), Keeper('Lumber','pow'),
+                Keeper('The Car', 'pow'), Keeper('Can of Gasoline', 'pow'),
+                Keeper('Donuts'), Keeper('The Chainsaw', 'pow'), 
+                Keeper('Coffee'), Keeper('Baseball Bat', 'pow'), 
+                Keeper('Sandwiches'), Keeper('Brains'),
+                Keeper('A Friend', 'friend')
+                )
 
     def info():
         return {'name' : 'Fluxx', 'players' : '2-6'}
@@ -87,4 +94,6 @@ class Game:
         deck = Deck([Game.card['FPR'], Game.card['D3P2'], Game.card['Draw 2'], 
             Game.card['Draw 3'], Game.card['Play 2'], Game.card['Play 3'],
             Game.card['D2P2']])
+        deck.shuffleIn(Game.keeper)
+        deck.shuffle()
         return deck

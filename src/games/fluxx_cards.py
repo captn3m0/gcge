@@ -20,6 +20,8 @@ class FluxxCard(Card):
             engine.play(self, 'creepers', to, _from)
         elif self.type == 'action':
             engine.play(self, 'actions', to, _from)
+    def onplay(self, engine):
+        pass
 
 class BasicRules(FluxxCard):
     def __init__(self):
@@ -120,3 +122,10 @@ class DrawNPlayM(FluxxCard):
                 engine.discard(card)
             engine.setPhase("draw")
 
+class Keeper(FluxxCard):
+    def __init__(self, name, _type=None):
+        super().__init__(name, 'keeper')
+        if _type == None:
+            self.classification = name
+        else:
+            self.classification = _type
