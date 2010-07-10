@@ -29,7 +29,7 @@ class BasicRules(FluxxCard):
     def __init__(self):
         super().__init__("Basic Rules", 'rule')
     def onplay(self, engine):
-        print("Played Basic Rule")
+        engine.ui.status("Played Basic Rule")
         engine.registerForPhase('play', self)
         engine.registerForPhase('draw', self)
     def onleave(self, engine):
@@ -45,7 +45,7 @@ class DrawN(FluxxCard):
         super().__init__("Draw {0}".format(n), 'rule', 1)
         self.n = n
     def onplay(self, engine):
-        print("Played {0}".format(self.name))
+        engine.ui.status("Played {0}".format(self.name))
         engine.registerForPhase('draw', self)
         engine.setPhase('draw')
         for card in engine.browseZone('rules'):
@@ -53,10 +53,9 @@ class DrawN(FluxxCard):
                 engine.unplay(card, 'rules')
                 engine.discard(card)
     def onleave(self, engine):
-        print("Discarding {}".format(self.name))
+        engine.ui.status("Discarding {}".format(self.name))
         engine.unregisterForPhase('draw', self)
     def draw(self, engine):
-        #print("Setting draw limit to {0}".format(self.n))
         engine.phase.limit = self.n
 
 class PlayN(FluxxCard):
@@ -64,7 +63,7 @@ class PlayN(FluxxCard):
         super().__init__("Play {0}".format(n), 'rule', 1)
         self.n = n
     def onplay(self, engine):
-        print("Played {0}".format(self.name))
+        engine.ui.status("Played {0}".format(self.name))
         engine.registerForPhase('play', self)
         engine.setPhase('play')
         for card in engine.browseZone('rules'):
@@ -72,10 +71,9 @@ class PlayN(FluxxCard):
                 engine.unplay(card, 'rules')
                 engine.discard(card)
     def onleave(self, engine):
-        print("Discarding {}".format(self.name))
+        engine.ui.status("Discarding {}".format(self.name))
         engine.unregisterForPhase('play', self)
     def play(self, engine):
-        #print("Setting play limit to {0}".format(self.n))
         engine.phase.limit = self.n
 
 class FirstPlayRandom(FluxxCard):
@@ -103,8 +101,8 @@ class DrawNPlayM(FluxxCard):
     def onleave(self, engine):
         engine.unregisterForPhase('action', self)
     def action(self, engine):
-        print("In {} Drawn{}/{} Played {}/{}".format(self.name, self.drawn,
-            self.draw, self.played, self.play))
+        engine.ui.status("In {} Drawn{}/{} Played {}/{}".format(self.name,
+            self.drawn, self.draw, self.played, self.play))
         player = engine.turn.player
         if self.drawn < self.draw:
             def drawCard(e=engine, s=self):
