@@ -2,12 +2,15 @@
 
 import sys
 sys.path.append('./games')
+sys.path.append('./ui')
 
 from cards import Hand
 from stage import Phase
 
 class GameEngine:
-    def __init__(self, game, numPlayers):
+    def __init__(self, game, numPlayers, ui='text'):
+        uiMod = __import__(ui)
+        self.ui = uiMod.UI(self, numPlayers)
         self.options = {}
         self.zones = [{} for p in range(-1, numPlayers)]
         self.phaseCallback = {}
@@ -25,20 +28,15 @@ class GameEngine:
             phase = self.phase
             self.procPhase(phase)
             try:
-                print(" ".join(map(str,[self.turn, phase,
+                self.ui.status(" ".join(map(str,[self.turn, phase,
                         self.hands[self.turn.player]])))
             except AttributeError as a:
-                print(a)
+                self.ui.status(a)
             phaseFunc = getattr(self.game, phase.name)
             phaseFunc(self)
             if len(self.options):
                 self.registerOption('exit', sys.exit)
-                choice = input("Choose: " +
-                        ", ".join(list(self.options.keys())) + "? ")
-                if choice in self.options:
-                    self.options[choice]()
-                else:
-                    print("Bad option")
+                self.ui.prompt(self.options)
 
     def registerPhases(self, phases):
         self.nextphase = []
@@ -65,7 +63,7 @@ class GameEngine:
         self.zones[player][zone] = []
 
     def give(self, player, card):
-        print("Giving player {0} card {1}".format(player,card))
+        self.ui.status("Giving player {0} card {1}".format(player,card))
         self.hands[player].add(card)
     def draw(self, zone):
         return self.zones[zone]['deck'].draw()
@@ -74,7 +72,7 @@ class GameEngine:
         self.zones[player]['discard'].append(card)
 
     def discardToDraw(self, discard=0, deck=0):
-        print("Shuffling discard to deck")
+        self.ui.status("Shuffling discard to deck")
         self.zones[deck]['deck'].shuffleIn(self.zones[discard]['discard'])
         self.zones[discard]['discard'] = []
 
@@ -110,9 +108,12 @@ class GameEngine:
 if __name__ == '__main__':
     game = 'fluxx'
     players = 2
+    ui = 'text'
     if len(sys.argv) > 1:
         game = sys.argv[1]
     if len(sys.argv) > 2:
         players = int(sys.argv[2])
-    g = GameEngine(game, players)
+    if len(sys.argv) > 3:
+        ui = sys.argv[3]
+    g = GameEngine(game, players, ui)
     g.run()
