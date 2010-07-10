@@ -5,6 +5,10 @@ class Card:
         self.name = name
     def __str__(self):
         return self.name
+    def onplay(self, engine):
+        pass
+    def onleave(self, engine):
+        pass
 
 class Hand:
     def __init__(self, player):

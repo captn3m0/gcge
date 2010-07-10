@@ -65,11 +65,17 @@ class GameEngine:
     def give(self, player, card):
         self.ui.status("Giving player {0} card {1}".format(player,card))
         self.hands[player].add(card)
-    def draw(self, zone):
-        return self.zones[zone]['deck'].draw()
+    def draw(self, player):
+        return self.zones[player]['deck'].draw()
 
     def discard(self, player, card):
-        self.zones[player]['discard'].append(card)
+        self.zones[player]['discard'].insert(0,card)
+
+    def placeOnBottom(self,player,zone,card):
+        self.zones[player][zone].add(card)
+
+    def placeOnTop(self,player,zone,card):
+        self.zones[player][zone].insert(0,card)
 
     def discardToDraw(self, discard=0, deck=0):
         self.ui.status("Shuffling discard to deck")
