@@ -81,19 +81,19 @@ class GameEngine:
     def browseZone(self, zone, controller=0):
         return self.zones[controller][zone]
 
-    def play(self, card, zone, player=0, controller=None):
-        if controller is None:
-            controller = player
+    def play(self, card, zone, controller=0, hand=None):
         self.zones[controller][zone].append(card)
         card.onplay(self)
-        if player:
-            self.hands[player].remove(card)
+        if hand:
+            hand.remove(card)
     def unplay(self, card, zone, controller=0):
         self.zones[controller][zone].remove(card)
         card.onleave(self)
         return card
-    def discard(self, card, controller=0, zone='discard'):
+    def discard(self, card, controller=0, zone='discard', hand=None):
         self.zones[controller][zone].add(card)
+        if hand:
+            hand.remove(card)
 
     def registerOption(self, name, func):
         self.options[name] = func

@@ -22,20 +22,22 @@ class Game:
 
     card = {"Basic Rules": BasicRules(), "Draw 2":DrawN(2), "Draw 3":DrawN(3),
                 "Play 2":PlayN(2), "Play 3":PlayN(3),
-                "FPR":FirstPlayRandom()}
+                "FPR":FirstPlayRandom(), "D3P2":DrawNPlayM(3,2),
+                "D2P2":DrawNPlayM(2,2)}
 
     def info():
         return {'name' : 'Fluxx', 'players' : '2-6'}
 
     def __init__(self, engine, numPlayers):
-        engine.registerPhases("setup draw play done".split())
+        engine.registerPhases("setup draw play action done".split())
         engine.setPhase("setup")
         engine.registerZone('rules', 0)
         engine.registerDeck(Game.makeDeck(), 0)
         engine.registerDiscard(Deck(), 0)
-        for p in range(1, numPlayers):
+        for p in range(1, numPlayers+1):
             engine.registerZone('keepers', p)
             engine.registerZone('creepers', p)
+            engine.registerZone('actions', p)
         self.numPlayers = numPlayers
         engine.ended = False
 
@@ -71,6 +73,10 @@ class Game:
         else:
             engine.setPhase("done")
 
+    def action(self, engine):
+        '''Actions mostly handle themselves'''
+        pass
+
     def done(self, engine):
         '''Handle the end of the turn'''
         engine.setTurn(FluxxTurn((engine.turn.player%self.numPlayers)+1))
@@ -78,6 +84,7 @@ class Game:
 
     def makeDeck():
         '''Return a Deck() containing the cards for this game'''
-        deck = Deck([Game.card['FPR'], Game.card['Draw 2'], 
-            Game.card['Draw 3'], Game.card['Play 2'], Game.card['Play 3']])
+        deck = Deck([Game.card['FPR'], Game.card['D3P2'], Game.card['Draw 2'], 
+            Game.card['Draw 3'], Game.card['Play 2'], Game.card['Play 3'],
+            Game.card['D2P2']])
         return deck
