@@ -9,8 +9,7 @@ from stage import Phase
 
 class GameEngine:
     def __init__(self, game, numPlayers, ui='text'):
-        uiMod = __import__(ui)
-        self.ui = uiMod.UI(self, numPlayers)
+        uiMod = __import__('ui.'+ui, fromlist='ui')
         self.options = {}
         self.zones = [{} for p in range(-1, numPlayers)]
         self.phaseCallback = {}
@@ -19,9 +18,14 @@ class GameEngine:
             self.hands[p] = Hand(p)
         gameMod = __import__(game)
         self.game = gameMod.Game(self, numPlayers)
+        self.ui = uiMod.UI(self, numPlayers)
+        self.ui.start()
 
     def run(self):
         while not self.ended:
+            self.step()
+
+    def step(self):
             self.options.clear()
             if len(self.nextphase):
                 self.phase = self.nextphase.pop(0)
@@ -31,7 +35,8 @@ class GameEngine:
                 self.ui.status(" ".join(map(str,[self.turn, phase,
                         self.hands[self.turn.player]])))
             except AttributeError as a:
-                self.ui.status(a)
+                #self.ui.status(a)
+                pass
             phaseFunc = getattr(self.game, phase.name)
             phaseFunc(self)
             if len(self.options):
@@ -116,4 +121,3 @@ if __name__ == '__main__':
     if len(sys.argv) > 3:
         ui = sys.argv[3]
     g = GameEngine(game, players, ui)
-    g.run()

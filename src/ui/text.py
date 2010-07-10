@@ -3,6 +3,9 @@ class UI:
         self.engine = engine
         self.numPlayers = numPlayers
 
+    def start(self):
+        self.engine.run()
+
     def status(self, status):
         print(status)
 

@@ -4,7 +4,7 @@ import copy
 
 class FluxxCard(Card):
     def __init__(self, name, type, priority = 0):
-        super().__init__(name)
+        Card.__init__(self, name)
         self.priority = priority
         self.type = type
     def playself(self, engine, to=None, _from=None):
@@ -27,7 +27,7 @@ class FluxxCard(Card):
 
 class BasicRules(FluxxCard):
     def __init__(self):
-        super().__init__("Basic Rules", 'rule')
+        FluxxCard.__init__(self, "Basic Rules", 'rule')
     def onplay(self, engine):
         engine.ui.status("Played Basic Rule")
         engine.registerForPhase('play', self)
@@ -42,7 +42,7 @@ class BasicRules(FluxxCard):
 
 class DrawN(FluxxCard):
     def __init__(self,n):
-        super().__init__("Draw {0}".format(n), 'rule', 1)
+        FluxxCard.__init__(self, "Draw {0}".format(n), 'rule', 1)
         self.n = n
     def onplay(self, engine):
         engine.ui.status("Played {0}".format(self.name))
@@ -60,7 +60,7 @@ class DrawN(FluxxCard):
 
 class PlayN(FluxxCard):
     def __init__(self,n):
-        super().__init__("Play {0}".format(n), 'rule', 1)
+        FluxxCard.__init__(self, "Play {0}".format(n), 'rule', 1)
         self.n = n
     def onplay(self, engine):
         engine.ui.status("Played {0}".format(self.name))
@@ -78,7 +78,7 @@ class PlayN(FluxxCard):
 
 class FirstPlayRandom(FluxxCard):
     def __init__(self):
-        super().__init__('First Play Random', 'rule')
+        FluxxCard.__init__(self, 'First Play Random', 'rule')
     def onplay(self, engine):
         engine.registerForPhase('play', self)
     def play(self, engine):
@@ -89,7 +89,7 @@ class FirstPlayRandom(FluxxCard):
 
 class DrawNPlayM(FluxxCard):
     def __init__(self, draw, play):
-        super().__init__('Draw {}, Play {}'.format(draw,play), 'action')
+        FluxxCard.__init__(self, 'Draw {}, Play {}'.format(draw,play), 'action')
         self.draw = draw
         self.play = play
     def onplay(self, engine):
@@ -127,7 +127,7 @@ class DrawNPlayM(FluxxCard):
 
 class Keeper(FluxxCard):
     def __init__(self, name, _type=None):
-        super().__init__(name, 'keeper')
+        FluxxCard.__init__(self, name, 'keeper')
         if _type == None:
             self.classification = name
         else:

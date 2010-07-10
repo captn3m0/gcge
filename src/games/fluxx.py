@@ -5,11 +5,11 @@ import random
 class FluxxTurn(Turn):
     '''A player's turn recording number of cards drawn and played that turn'''
     def __init__(self, player):
-        super().__init__(player)
+        Turn.__init__(self,player)
         self.drawn = 0
         self.played = 0
     def __str__(self):
-        return "{0} D{1} P{2}".format(super().__str__(), 
+        return "{0} D{1} P{2}".format(Turn.__str__(self), 
             self.drawn, self.played)
 
 # Watch for draw3/play2 - don't count draws and plays against limit
