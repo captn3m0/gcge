@@ -1,9 +1,6 @@
 name: war
 players: 2
 phases:
-    setup:
-        1. deal out deck
-        2. phase = play
     play:
         1. each player: play card
         2.  if card a > card b:
