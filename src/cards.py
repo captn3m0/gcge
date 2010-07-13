@@ -30,30 +30,25 @@ class Hand:
     def pickRandom(self):
         return self.hand[random.randint(0, self.size()-1)]
 
-class Deck:
+class Deck(list):
     def __init__(self, cards=None):
-        if cards == None:
-            cards = []
-        self.cards = cards
-    def __iter__(self):
-        return self.cards.__iter__()
-    def __getitem__(self, index):
-        return self.cards[index]
+        if cards != None:
+            self.extend(cards)
     def __str__(self):
-        return "[{}]".format(":".join(map(str,self.cards)))
+        return "[{}]".format(":".join(map(str,self)))
 
     def size(self):
-        return len(self.cards)
+        return len(self)
 
     def add(self, card):
-        self.cards.append(card)
+        self.append(card)
 
     def shuffleIn(self, cards):
-        self.cards.extend(cards)
+        self.extend(cards)
         self.shuffle()
 
     def shuffle(self):
-        random.shuffle(self.cards)
+        random.shuffle(self)
         return self
 
     def deal(self, dest, num):
@@ -63,7 +58,7 @@ class Deck:
                 d.add(card)
 
     def draw(self):
-        return self.cards.pop(0)
+        return self.pop(0)
 
 class PlayingCard(Card):
     suit = {"H":"Heart","C":"Club","D":"Diamond","S":"Spade","N":"None"}

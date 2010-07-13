@@ -76,8 +76,12 @@ class GameEngine:
     def discard(self, player, card):
         self.zones[player]['discard'].insert(0,card)
 
-    def placeOnBottom(self,player,zone,card):
-        self.zones[player][zone].add(card)
+    def placeOnBottom(self,player,zone,*cards):
+        deck = self.zones[player][zone]
+        try:
+            deck.extend(cards)
+        except TypeError:
+            [deck.append(a) for a in cards]
 
     def placeOnTop(self,player,zone,card):
         self.zones[player][zone].insert(0,card)
@@ -91,6 +95,7 @@ class GameEngine:
         return self.zones[controller][zone]
 
     def play(self, card, zone, controller=0, hand=None):
+        self.ui.status("Played {} into {}'s {}".format(card, controller, zone))
         self.zones[controller][zone].append(card)
         card.onplay(self)
         if hand:

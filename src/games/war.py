@@ -25,33 +25,49 @@ class Game:
 
     def play(self,engine):
         '''Handle the play phase'''
-        def playCard(e=engine):
-            e.play(e.draw(e.turn.player),'battle',e.turn.player)
-            self.playersPlayed += 1
-        playCard()
-        engine.setTurn(Turn((engine.turn.player%self.numPlayers)+1))
         if self.playersPlayed == self.numPlayers:
-            self.randomPile=[engine.unplay(engine.browseZone('battle',1)[0],'battle',1),engine.unplay(engine.browseZone('battle',2)[0],'battle',2)] 
-            if self.randomPile[0].rank > self.randomPile[1].rank:
-                random.shuffle(self.randomPile)
-                for card in self.randomPile:
-                    engine.placeOnBottom(1,'deck',card)
+            self.playersPlayed = 0
+            c1 = engine.browseZone('battle', 1)[0]
+            c2 = engine.browseZone('battle', 2)[0]
+            if( c1.rank > c2.rank ):
+                engine.ui.status('Player 1 won the battle')
+                engine.unplay(c1,'battle',1)
+                engine.unplay(c2,'battle',2)
+                tmp = [c1,c2]
+                random.shuffle(tmp)
+                engine.placeOnBottom(1,'deck', tmp)
                 engine.setPhase("next")
-            elif self.randomPile[0].rank < self.randomPile[1].rank:
-                random.shuffle(self.randomPile)
-                for card in self.randomPile:
-                    engine.placeOnBottom(2,'deck',card)
+            elif( c2.rank > c1.rank ):
+                engine.ui.status('Player 2 won the battle')
+                engine.unplay(c1,'battle',1)
+                engine.unplay(c2,'battle',2)
+                tmp = [c1,c2]
+                random.shuffle(tmp)
+                engine.placeOnBottom(2,'deck', tmp)
                 engine.setPhase("next")
             else:
+                engine.ui.status('The battle is a draw!')
                 engine.setPhase("war") 
+        else:
+            def playCard(e=engine,s=self):
+                card = e.draw(e.turn.player)
+                e.play(e.draw(e.turn.player),'battle',e.turn.player)
+                s.playersPlayed += 1
+                e.setTurn(Turn((e.turn.player%s.numPlayers)+1))
+            engine.registerOption('play', playCard)
+
     def war(self,engine):
-        pass
+        engine.ui.status('War!')
+        engine.setPhase('next')
 
     def next(self,engine):
-        pass
+        engine.ui.status('Next!')
+        engine.setPhase('play')
 
     def lose(self,engine):
-        pass
+        engine.ui.status('Player has lost')
+        self.ended = True
 
     def win(self,engine):
-        pass
+        engine.ui.status('Player has won')
+        self.ended = True
