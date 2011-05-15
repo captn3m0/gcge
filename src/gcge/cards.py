@@ -1,6 +1,20 @@
 import random
 
 class Card:
+    """ TODO -- documentation?
+
+    You might use this class in the following way.
+
+    >>> import gcge.cards
+    >>> c = gcge.cards.Card('foo')
+    >>> print str(c)
+    foo
+    >>> c = gcge.cards.Card(name='baz')
+    >>> print str(c)
+    baz
+
+    """
+
     def __init__(self, name):
         self.name = name
     def __str__(self):

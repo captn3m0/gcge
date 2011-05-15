@@ -14,6 +14,7 @@ setup(
     author_email='gerglion@gmail.com',
     url='http://code.google.com/p/gcge/',
     install_requires=[
+        'nose',
     ],
     packages=find_packages(exclude=['ez_setup']),
     zip_safe=False,
