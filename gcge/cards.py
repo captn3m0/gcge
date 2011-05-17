@@ -101,15 +101,15 @@ def makePlayingCardDeck(ranking,suits):
         if value == " ":
             rank += 1
         elif value == "O":
-            card = PlayingCard("N",value,rank) 
+            card = PlayingCard("N",value,rank)
             cards.append(card)
-            card = PlayingCard("N",value,rank) 
+            card = PlayingCard("N",value,rank)
             cards.append(card)
         else:
             for suit in list(suits):
-                card = PlayingCard(suit,value,rank) 
+                card = PlayingCard(suit,value,rank)
                 cards.append(card)
-    deck = Deck(cards) 
+    deck = Deck(cards)
     return deck
 
 def stdDeck():

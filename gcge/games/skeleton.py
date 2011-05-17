@@ -22,4 +22,3 @@ class Game:
     def lose(self, engine):
         engine.ui.status("You lost!")
         engine.ended = True
-        

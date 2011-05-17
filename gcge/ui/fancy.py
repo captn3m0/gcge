@@ -33,7 +33,7 @@ class UI:
         self.statscr.refresh()
 
     def prompt(self, options):
-        self.optscr.addstr(1,1,"Choose: " + 
+        self.optscr.addstr(1,1,"Choose: " +
             ", ".join(list(options.keys())) + "? ")
         self.optscr.refresh()
         choice = self.getInput()

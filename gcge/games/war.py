@@ -47,7 +47,7 @@ class Game:
                 engine.setPhase("next")
             else:
                 engine.ui.status('The battle is a draw!')
-                engine.setPhase("war") 
+                engine.setPhase("war")
         else:
             def playCard(e=engine,s=self):
                 card = e.draw(e.turn.player)

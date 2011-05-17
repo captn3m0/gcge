@@ -10,7 +10,7 @@ class UI:
         print(status)
 
     def prompt(self, options):
-        choice = input("Choose: " + 
+        choice = input("Choose: " +
             ", ".join(list(options.keys())) + "? ")
         if choice in options:
             options[choice]()

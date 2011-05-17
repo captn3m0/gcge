@@ -9,14 +9,14 @@ class FluxxTurn(Turn):
         self.drawn = 0
         self.played = 0
     def __str__(self):
-        return "{0} D{1} P{2}".format(Turn.__str__(self), 
+        return "{0} D{1} P{2}".format(Turn.__str__(self),
             self.drawn, self.played)
 
 # Watch for draw3/play2 - don't count draws and plays against limit
 
 class Game:
     '''The Fluxx card game
-    
+
     Produced by Looney Labs - http://looneylabs.com
     Buy the real thing!'''
 
@@ -26,8 +26,8 @@ class Game:
                 "D2P2":DrawNPlayM(2,2)}
     keeper = (  Keeper('The Shovel','pow'), Keeper('Lumber','pow'),
                 Keeper('The Car', 'pow'), Keeper('Can of Gasoline', 'pow'),
-                Keeper('Donuts'), Keeper('The Chainsaw', 'pow'), 
-                Keeper('Coffee'), Keeper('Baseball Bat', 'pow'), 
+                Keeper('Donuts'), Keeper('The Chainsaw', 'pow'),
+                Keeper('Coffee'), Keeper('Baseball Bat', 'pow'),
                 Keeper('Sandwiches'), Keeper('Brains'),
                 Keeper('A Friend', 'friend')
                 )
@@ -91,7 +91,7 @@ class Game:
 
     def makeDeck():
         '''Return a Deck() containing the cards for this game'''
-        deck = Deck([Game.card['FPR'], Game.card['D3P2'], Game.card['Draw 2'], 
+        deck = Deck([Game.card['FPR'], Game.card['D3P2'], Game.card['Draw 2'],
             Game.card['Draw 3'], Game.card['Play 2'], Game.card['Play 3'],
             Game.card['D2P2']])
         deck.shuffleIn(Game.keeper)
