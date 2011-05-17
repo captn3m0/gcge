@@ -25,6 +25,8 @@ class Card:
         pass
 
 class Hand:
+    """ TODO -- add a docstring here """
+
     def __init__(self, player):
         self.player = player
         self.hand = []
