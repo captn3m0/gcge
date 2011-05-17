@@ -1,4 +1,9 @@
 import random
+import sys
+
+# Check to guarantee python3
+if sys.version_info[0] != 3:
+    raise SystemError, "Python3 required."
 
 class Card:
     """ TODO -- documentation?
@@ -77,6 +82,16 @@ class Deck(list):
         return self.pop(0)
 
 class PlayingCard(Card):
+    """ A specialization of :class:`Card` that represents a playing card
+    in a typical Western card deck.
+
+    >>> import gcge.cards
+    >>> c = gcge.cards.PlayingCard('H', '2', 'what-is-rank')
+    >>> print str(c)
+    Two of Hearts
+
+    """
+
     suit = {"H":"Heart","C":"Club","D":"Diamond","S":"Spade","N":"None"}
     value = {"2":"Two","3":"Three","4":"Four","5":"Five","6":"Six",
               "7":"Seven","8":"Eight","9":"Nine","0":"Ten",
