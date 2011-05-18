@@ -3,7 +3,7 @@ import sys
 
 # Check to guarantee python3
 if sys.version_info[0] != 3:
-    raise SystemError, "Python3 required."
+    raise SystemError( "Python3 required." )
 
 class Card:
     """ TODO -- documentation?
@@ -12,10 +12,10 @@ class Card:
 
     >>> import gcge.cards
     >>> c = gcge.cards.Card('foo')
-    >>> print str(c)
+    >>> print( str(c) )
     foo
     >>> c = gcge.cards.Card(name='baz')
-    >>> print str(c)
+    >>> print( str(c) )
     baz
 
     """
@@ -87,7 +87,7 @@ class PlayingCard(Card):
 
     >>> import gcge.cards
     >>> c = gcge.cards.PlayingCard('H', '2', 'what-is-rank')
-    >>> print str(c)
+    >>> print( str(c) )
     Two of Hearts
 
     """
